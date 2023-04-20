@@ -3,21 +3,12 @@ import React, {useState} from 'react';
 
 function App() {
 
-  // define if sorted
-  let sorted = false;
-  
-  // set so that you can't break app
-  let sorting = false;
-
   // hook for array of random values
   const [displayArr, setDispArr] = useState(Array.from({length: 150}, (_,index) => Math.floor(Math.random() * (150 - 5 + 1) + 5)));
 
   // change array to new array with random values
   function generateNewArray() {
-    if (!sorting) {
-      setDispArr(Array.from({length: 150}, (_,index) => Math.floor(Math.random() * (150 - 5 + 1) + 5)));
-      sorted = false;
-    }
+    setDispArr(Array.from({length: 150}, (_,index) => Math.floor(Math.random() * (150 - 5 + 1) + 5)));
   }
 
   // genare the divs that correspond to the values in the array
@@ -29,8 +20,6 @@ function App() {
 
   // implementation of bubble-sort
   function bubbleSort() {
-    if (!sorting) {
-      if (!sorted) {sorting = true;}
       let numBars = document.getElementsByClassName("num-bar");
       let swapArr = displayArr;
       let n = swapArr.length
@@ -44,8 +33,9 @@ function App() {
           if (swapArr[j] > swapArr[j+1]) {
             //swap
             setTimeout(() => {
-              numBars[j].style.height = ''+((swapArr[j+1]/150)*100)+'%'
-              numBars[j+1].style.height = ''+((swapArr[j]/150)*100)+'%'
+              // swapArr is updated before timeout
+              numBars[j].style.height = ''+((swapArr[j]/150)*100)+'%'
+              numBars[j+1].style.height = ''+((swapArr[j+1]/150)*100)+'%'
             }, (j+1) * 30);
 
             let temp = swapArr[j+1];
@@ -57,19 +47,44 @@ function App() {
             numBars[j+1].style.backgroundColor = "rgb(243, 220, 15)";
           }, (j+1) * 30);
         }
-          // weird issue
-          if (i == n - 2 && !sorted)
-          {
-            setTimeout(() => {
-              let temp = numBars[n-1].style.height;
-              numBars[n-1].style.height = numBars[n-2].style.height;
-              numBars[n-2].style.height = temp;
-              sorting = false;
-            }, (i) * 29.5);
-          }
       }
+      setDispArr(swapArr);
     }
-    sorted = true;
+
+  // implementaion of insertion-sort
+  function insertionSort() {
+    let numBars = document.getElementsByClassName("num-bar");
+    let swapArr = displayArr;
+    const n = swapArr.length
+
+    for (let i = 1; i < n; i++) {
+      let key = swapArr[i];
+      let j = i - 1;
+      while (j >= 0 && swapArr[j] > key) {
+        setTimeout(() => {
+          numBars[j].style.backgroundColor = "red";
+          numBars[i].style.backgroundColor = "red";
+        }, j * 30);
+        
+        setTimeout(() => {
+          numBars[j+1].style.height = ''+((swapArr[j+1]/150)*100)+'%'
+        }, (j+1) * 30)
+
+        swapArr[j+1] = swapArr[j];
+        
+        setTimeout(() => {
+          numBars[j].style.backgroundColor = "rgb(243, 220, 15)";
+        }, (j+1) * 30);
+        
+        j--;
+      }
+      setTimeout(() => {
+        numBars[j+1].style.height = ''+((swapArr[j+1]/150)*100)+'%'
+        numBars[i].style.backgroundColor = "rgb(243, 220, 15)";
+      }, (j+1) * 30)
+      swapArr[j+1] = key;
+    }
+    setDispArr(swapArr);
   }
 
   return (
@@ -80,7 +95,7 @@ function App() {
       <div id="button-container">
         <button onClick={() => generateNewArray()}>New Array</button>
         <button onClick={() => bubbleSort()}>Bubble-Sort</button>
-        <button>Insertion-Sort</button>
+        <button onClick={() => insertionSort()}>Insertion-Sort</button>
         <button>Merge-Sort</button>
         <button>Quick-Sort</button>
         <button>Heap-Sort</button>
