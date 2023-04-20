@@ -1,0 +1,18 @@
+div {text-align: center;}
+
+h1 {font-size: 50px;}
+
+ul {
+  font-size: 30px;
+  display: inline-block;
+  margin: 0;
+}
+
+li {margin-bottom: 30px;}
+
+button {
+  margin-left: 5px;
+  font-size: 20px;
+}
+
+input {font-size: 20px;}
