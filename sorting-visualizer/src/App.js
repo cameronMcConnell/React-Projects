@@ -484,9 +484,6 @@ function App() {
 
   return (
     <div id="sort-container">
-      <div id="visual-container">
-        {genArrDivs()}    
-      </div>
       <div id="button-container">
         
         <button onClick={() => 
@@ -522,6 +519,11 @@ function App() {
           <input type="range" min="0.5" max="8" step="0.1" value={animSpeed} 
           onChange={e => {if (!sorting) {setAnimSpeed(Number(e.target.value))}}} 
           onClick={e => {if (!sorting) {setAnimSpeed(Number(e.target.value))}}}/>
+        </div>
+      </div>
+      <div id="visual-border">
+        <div id="visual-container">
+          {genArrDivs()}    
         </div>
       </div>
     </div>
