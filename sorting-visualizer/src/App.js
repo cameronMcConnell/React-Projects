@@ -3,6 +3,9 @@ import React, {useState} from 'react';
 
 function App() {
 
+  // so that you can't do multiple sorts while on is active
+  let sorting = false;
+
   // used for total number of bars in the display
   const [totalNumBars, setNumBars] = useState(250);
   
@@ -46,11 +49,18 @@ function App() {
     setTimeout(() => {
       osc1.stop();
       osc2.stop();
+      sorting = false;
     }, kft * 4)
   }
 
   // implementation of bubble-sort
   function bubbleSort() {
+
+      if (sorting)
+        return;
+      else
+        sorting = true;
+
       let numBars = document.getElementsByClassName("num-bar");
       let swapArr = displayArr;
       let n = swapArr.length;
@@ -82,6 +92,7 @@ function App() {
       osc1.connect(gainNode).connect(audioContext.destination);
       osc2.connect(gainNode).connect(audioContext.destination);
   
+      osc1.start();
       osc2.start();
 
       // animation for bubble-sort
@@ -89,6 +100,7 @@ function App() {
       for (let x of animations) {
         if (x[0] === "comparison") {
           setTimeout(() => {
+            osc1.frequency.value = parseInt(numBars[x[1]].style.height) * 20;
             osc2.frequency.value = parseInt(numBars[x[2]].style.height) * 20;
             numBars[x[1]].style.backgroundColor = "red";
             numBars[x[2]].style.backgroundColor = "red";
@@ -111,7 +123,6 @@ function App() {
         }
       }
       setTimeout(() => {
-        osc1.start();
         finalLoop(osc1, osc2)
       }, kft * 4) 
       setDispArr(swapArr);
@@ -119,6 +130,13 @@ function App() {
 
   // implementaion of insertion-sort
   function insertionSort() {
+
+    if (sorting)
+      return;
+    else
+      sorting = true;
+
+
     let numBars = document.getElementsByClassName("num-bar");
     let swapArr = displayArr;
     const n = swapArr.length;
@@ -151,6 +169,7 @@ function App() {
     osc2.connect(gainNode).connect(audioContext.destination);
 
     osc1.start();
+    osc2.start();
     
     // sorting animation for insertion-sort
     let kft = 0;
@@ -158,6 +177,7 @@ function App() {
       if (x[0] === "comparison") {
         setTimeout(() => {
           osc1.frequency.value = parseInt(numBars[x[1]].style.height) * 20;
+          osc2.frequency.value = parseInt(numBars[x[2]].style.height) * 20;
           numBars[x[1]].style.backgroundColor = "red";
           numBars[x[2]].style.backgroundColor = "red";
         }, (kft) * 4);
@@ -173,7 +193,6 @@ function App() {
       }
     }
     setTimeout(() => {
-      osc2.start();
       finalLoop(osc1, osc2);
     }, kft * 4) 
     setDispArr(swapArr);
@@ -327,12 +346,14 @@ function App() {
     osc2.connect(gainNode).connect(audioContext.destination);
 
     osc1.start();
+    osc2.start();
 
     let kft = 0;
     for (let x of animations) {
       if (x[0] === "comparison") {
         setTimeout(() => {
           osc1.frequency.value = parseInt(numBars[x[1]].style.height) * 20;
+          osc2.frequency.value = parseInt(numBars[x[2]].style.height) * 20;
           numBars[x[1]].style.backgroundColor = "red";
           numBars[x[2]].style.backgroundColor = "red";
         },(kft) * 4);
@@ -343,6 +364,7 @@ function App() {
           numBars[x[1]].style.backgroundColor = "rgb(243, 220, 15)";
           numBars[x[2]].style.backgroundColor = "rgb(243, 220, 15)";
         },(kft) * 4);
+        kft += animSpeed; 
       }
       else {
         setTimeout(() => {
@@ -355,7 +377,106 @@ function App() {
       }
     }
     setTimeout(() => {
-      osc2.start();
+      finalLoop(osc1, osc2);
+    }, kft * 4)
+    setDispArr(arr);
+  }
+
+  function heapSort(arr) {
+    const n = arr.length;
+    let animations = [];
+
+    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      animations = heapify(arr, n, i, animations);
+    }
+
+    for (let j = n - 1; j > 0; j--) {
+      animations.push(["swap", j, 0, arr[j], arr[0]]);
+
+      let temp = arr[0];
+      arr[0] = arr[j];
+      arr[j] = temp;
+
+      animations = heapify(arr, j, 0, animations);
+    }
+    
+    animateHeap(arr, animations);
+  }
+
+  function heapify(arr, n, i, anims) {
+    let largest = i;
+    let l = 2 * i + 1;
+    let r = 2 * i + 2;
+
+    if (l < n && arr[l] > arr[largest]) {
+      anims.push(["comparison", l, largest]);
+      anims.push(["color-fix", l, largest]);
+      largest = l;
+    }
+
+    if (r < n && arr[r] > arr[largest]) {
+      anims.push(["comparison", r, largest]);
+      anims.push(["color-fix", r, largest]);
+      largest = r;
+    }
+
+    if (largest !== i) { 
+      anims.push(["swap", i, largest, arr[i], arr[largest]]);
+      
+      let temp = arr[i];
+      arr[i] = arr[largest];
+      arr[largest] = temp;
+
+      return heapify(arr, n, largest, anims);
+    }
+
+    return anims;
+  }
+
+  function animateHeap(arr, animations) {
+    let numBars = document.getElementsByClassName("num-bar");
+    const audioContext = new AudioContext();
+    const gainNode = new GainNode(audioContext);
+
+    const osc1 = audioContext.createOscillator();
+    const osc2 = audioContext.createOscillator();
+    gainNode.gain.value = 0.01;
+
+    osc1.connect(gainNode).connect(audioContext.destination);
+    osc2.connect(gainNode).connect(audioContext.destination);
+
+    osc1.start();
+    osc2.start();
+
+    let kft = 0;
+    for (let x of animations) {
+      if (x[0] === "comparison") {
+        setTimeout(() => {
+          osc1.frequency.value = parseInt(numBars[x[1]].style.height) * 20;
+          osc2.frequency.value = parseInt(numBars[x[2]].style.height) * 20;
+          numBars[x[1]].style.backgroundColor = "red";
+          numBars[x[2]].style.backgroundColor = "red";
+        },(kft) * 4);
+        kft += animSpeed;
+      }
+      else if (x[0] === "color-fix") {
+        setTimeout(() => {
+          numBars[x[1]].style.backgroundColor = "rgb(243, 220, 15)";
+          numBars[x[2]].style.backgroundColor = "rgb(243, 220, 15)";
+        },(kft) * 4);
+        kft += animSpeed;
+      }
+      else {
+        setTimeout(() => {
+          numBars[x[1]].style.height = ''+((x[4]/totalNumBars)*100)+'%';
+          numBars[x[2]].style.height = ''+((x[3]/totalNumBars)*100)+'%';
+          numBars[x[1]].style.backgroundColor = "rgb(243, 220, 15)";
+          numBars[x[2]].style.backgroundColor = "rgb(243, 220, 15)";
+        }, (kft) * 4);
+        kft += animSpeed;
+      }
+    }
+    setTimeout(() => {
       finalLoop(osc1, osc2);
     }, kft * 4)
     setDispArr(arr);
@@ -368,33 +489,39 @@ function App() {
       </div>
       <div id="button-container">
         
-        <button onClick={() => generateNewArray()}> New Array </button>
+        <button onClick={() => 
+        { if (sorting) {return;} generateNewArray()}}> New Array </button>
         <button onClick={() => bubbleSort()}> Bubble-Sort </button>
         <button onClick={() => insertionSort()}> Insertion-Sort </button>
         
-        <button onClick={() => { let swapArr = displayArr; 
+        <button onClick={() => {if (sorting) {return;} else {sorting = true;} 
+          let swapArr = displayArr; 
           let animations = mergeSort(swapArr, 0, displayArr.length-1); 
           animateMerge(swapArr, animations);}}> Merge-Sort
         </button>
         
-        <button onClick={() => {let swapArr = displayArr; 
+        <button onClick={() => {if (sorting) {return;} else {sorting = true;}
+          let swapArr = displayArr; 
           let animations = quickSort(swapArr, [], 0, swapArr.length-1);
           animateQuick(swapArr, animations);}}> Quick-Sort
         </button>
         
-        <button>Heap-Sort</button>
+        <button onClick={() => {if (sorting) {return;} else {sorting = true;}
+          let swapArr = displayArr; heapSort(swapArr);
+          }}>Heap-Sort
+        </button>
         
         <div className="input-container">
           <label># of Array Elements: {totalNumBars}</label>
           <input type="range" min="100" max="1000" step="1" value={totalNumBars} 
-          onChange={e => {setNumBars(Number(e.target.value)); generateNewArray();}}
-          onClick={e => {setNumBars(Number(e.target.value)); generateNewArray();}}/>
+          onChange={e => {if (!sorting) {setNumBars(Number(e.target.value)); generateNewArray();}}}
+          onClick={e => {if (!sorting) {setNumBars(Number(e.target.value)); generateNewArray();}}}/>
         </div>
         <div className="input-container">
           <label>Animation Speed: {animSpeed}</label>
           <input type="range" min="0.5" max="8" step="0.1" value={animSpeed} 
-          onChange={e => setAnimSpeed(Number(e.target.value))} 
-          onClick={e => setAnimSpeed(Number(e.target.value))}/>
+          onChange={e => {if (!sorting) {setAnimSpeed(Number(e.target.value))}}} 
+          onClick={e => {if (!sorting) {setAnimSpeed(Number(e.target.value))}}}/>
         </div>
       </div>
     </div>
