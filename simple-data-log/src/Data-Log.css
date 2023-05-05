@@ -1,0 +1,32 @@
+#item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.inner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+    height: 50%;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2.5% 0 2.5% 0;
+}
+
+input {
+    margin-bottom: 2.5%;
+}
+
+h1 {
+    margin: 5% 0 5% 0;
+}
