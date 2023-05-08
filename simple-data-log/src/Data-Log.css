@@ -6,6 +6,11 @@
     height: 100vh;
 }
 
+#hr-span {
+    display: flex;
+    justify-content: center;
+}
+
 .inner-container {
     display: flex;
     flex-direction: column;
@@ -36,4 +41,14 @@ h1 {
 hr {
     width: 75%;
     margin: 0 12.5% 0 12.5%;
+}
+
+ul {
+    list-style-position: inside;
+    text-align: center;
+    padding: 0;
+}
+
+h2 {
+    margin: 1.25% 0 1.25% 0;
 }
