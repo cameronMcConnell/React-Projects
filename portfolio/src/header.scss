@@ -1,0 +1,54 @@
+@import './colors.scss';
+@import './font.scss';
+
+header {
+    color: $white;
+    font-family: Urbanist;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+img {
+    width: 7.5%;
+    height: auto;
+    border-radius: 50%;
+    border: 0.05em solid $black;
+}
+
+#h-div {
+    width: 97.5%;
+    height: 7.5%;
+    padding: 1.25%;
+    display: flex;
+    align-items: center;
+    column-gap: 2.5%;
+    
+    h1 {
+        font-size: 5vw;
+        font-weight: 800;
+        margin: 0;
+    }
+}
+
+#icon-span {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+    column-gap: 5%;
+}
+
+a.icon-links:-webkit-any-link {
+    text-decoration: none;
+    color: $white;
+}   
+
+.fa {
+    font-size: 5vw;
+    transition: font-size 0.5s ease-in-out;
+}
+
+.fa:hover {
+    font-size: 6.5vw;
+}

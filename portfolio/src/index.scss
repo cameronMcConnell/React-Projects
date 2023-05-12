@@ -1,0 +1,16 @@
+@import './colors';
+
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: repeating-linear-gradient(to left top, $maroon, $magenta, $hot-red, $maroon, $magenta, $hot-red, $maroon 50%);
+    background-size: 100% 300%;
+    animation: gradientSlide 20s linear alternate infinite;
+}
+
+@keyframes gradientSlide {
+    0% {background-position: 0% 100%;}
+    100% {background-position: 0% 0%;}
+}
