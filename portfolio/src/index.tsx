@@ -4,6 +4,7 @@ import './index.scss';
 import Header from './header';
 import Quote from './quote'
 import About from './about'
+import Projects from './projects';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -16,6 +17,7 @@ root.render(
     <>
       <Quote />
       <About />
+      <Projects />
     </>
   </React.StrictMode>
 );

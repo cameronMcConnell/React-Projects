@@ -1,5 +1,6 @@
 @import './font.scss';
 @import './colors.scss';
+@import './scroll.scss';
 
 #quote-container {
     display: flex;
@@ -17,6 +18,8 @@
 #quote-block {
     width: 60%;
     padding: 1.25%;
+    border: 0.05em solid $white;
+    border-radius: 0.5em;
 }
 
 #quotee {

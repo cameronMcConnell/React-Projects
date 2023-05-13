@@ -1,0 +1,72 @@
+@import './font.scss';
+@import './colors.scss';
+@import './scroll.scss';
+
+#projects-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    font-family: Urbanist;
+    color: $white;
+    text-align: center;
+}
+
+#projects-header {
+    margin: 0;
+    padding: 1%;
+    font-size: 4vw;
+    font-weight: 700;
+}
+
+#pcard-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    column-gap: 3%;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    height: auto;
+    border: 0.05em solid $white;
+    border-radius: 0.5em;
+    font-size: 1vw;
+    text-align: center;
+}
+
+.pcard-title {
+    margin: 0;
+    padding: 1%;
+    font-size: 2vw;
+    font-weight: 600;
+}
+
+.pcard-subheader {
+    margin: 0;
+    padding: 1%;
+    font-size: 1.5vw;
+    font-weight: 600;
+}
+
+.pcard-img {
+    width: 90%;
+    height: auto;
+    border-radius: 0;
+    border: none;
+    padding: 1%;
+}
+
+.pcard-txt {
+    width: 80%;
+}
+
+ul {
+    padding: 0;
+    list-style-position: inside;
+}
